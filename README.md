@@ -26,7 +26,7 @@ flask run
 
 ## Instalación de requirements
 ```
-pip install -r requirements.tx
+pip install -r requirements.txt
 ````
 
 
