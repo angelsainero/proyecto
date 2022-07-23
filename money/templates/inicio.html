@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>myCRYPTO</title>
+</head>
+
+<body>
+    <header>
+        Registro de movimientos de Criptomonedas
+    </header>
+    <nav>
+        Inicio | Compra | Estado
+    </nav>
+    <table class="lista">
+        <tr>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>From</th>
+            <th>Q</th>
+            <th>To</th>
+            <th>Q</th>
+            <th>P.U</th>
+        </tr>
+        {% for mov in movs %}
+        <tr>
+            <td>{{mov.date}}</td>
+            <td>{{mov.time}}</td>
+            <td>{{mov.moneda_from}}</td>
+            <td>{{mov.cantidad_from}}</td>
+            <td>{{mov.moneda_to}}</td>
+            <td>{{mov.cantidad_to}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <footer class="pie-de-pgina">2022 - Todos los derechos reservados</footer>
+</body>
+
+</html>

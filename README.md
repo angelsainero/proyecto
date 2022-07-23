@@ -33,6 +33,6 @@ pip install -r requirements.txt
 
 Recursos
 kata 14 mnuto 50 - coinapi
-kata 16 1:35:50 - html
+kata 16 1:35:50 - html (me quedo aquí)
 kata 19  flask - sql
     bbdd: 1:38:00

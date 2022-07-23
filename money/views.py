@@ -1,9 +1,16 @@
+from flask import render_template
+
 from . import app
+from.models import DBManager
+
+RUTA = "data/money.db"
 
 
 @app.route("/")
 def inicio():
-    return "página inicio movimientos"
+    db = DBManager(RUTA)
+    movimientos = db.consultaSQL("SELECT * from movimientos")
+    return render_template("inicio.html", movs=movimientos)
 
 
 @app.route("/purchase", methods=["GET", "POST"])
