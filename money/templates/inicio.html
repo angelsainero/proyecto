@@ -28,16 +28,22 @@
                 <th class="cabecera_tabla">Q</th>
                 <th class="cabecera_tabla">P.U</th>
             </tr>
-            {% for mov in movs %}
+            {% if movs %}
+                {% for mov in movs %}
+                <tr>
+                    <td>{{mov.date}}</td>
+                    <td>{{mov.time}}</td>
+                    <td>{{mov.moneda_from}}</td>
+                    <td>{{mov.cantidad_from}}</td>
+                    <td>{{mov.moneda_to}}</td>
+                    <td>{{mov.cantidad_to}}</td>
+                </tr>
+                {% endfor %}
+                {% else %}
             <tr>
-                <td>{{mov.date}}</td>
-                <td>{{mov.time}}</td>
-                <td>{{mov.moneda_from}}</td>
-                <td>{{mov.cantidad_from}}</td>
-                <td>{{mov.moneda_to}}</td>
-                <td>{{mov.cantidad_to}}</td>
+                <td colspan="4">No hay movimientos que mostrar</td>
             </tr>
-            {% endfor %}
+            {% endif %}
         </table>
     </main>
     <footer class="pie_de_pagina">2022 - Todos los derechos reservados</footer>
