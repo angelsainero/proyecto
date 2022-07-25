@@ -16,7 +16,7 @@ nav {
 }
 
 main {
-    max-width: 800px;
+    max-width: 900px;
     margin: auto;
     padding: 0 20px;
 }
@@ -27,7 +27,12 @@ table.paper {
 }
 
 .cabecera_tabla {
-    border-bottom: #367bf0 1px solid;
+    border-bottom: #E43030 1px solid;
     text-align: left;
+}
 
+.pie_de_pagina {
+    margin-top: 40px;
+    padding: 20px;
+    border-top: #367bf0 solid 1px;
 }
