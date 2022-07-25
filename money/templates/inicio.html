@@ -17,27 +17,29 @@
     <nav>
         Inicio | Compra | Estado
     </nav>
-    <table class="paper">
-        <tr>
-            <th>Fecha</th>
-            <th>Hora</th>
-            <th>From</th>
-            <th>Q</th>
-            <th>To</th>
-            <th>Q</th>
-            <th>P.U</th>
-        </tr>
-        {% for mov in movs %}
-        <tr>
-            <td>{{mov.date}}</td>
-            <td>{{mov.time}}</td>
-            <td>{{mov.moneda_from}}</td>
-            <td>{{mov.cantidad_from}}</td>
-            <td>{{mov.moneda_to}}</td>
-            <td>{{mov.cantidad_to}}</td>
-        </tr>
-        {% endfor %}
-    </table>
+    <main>
+        <table class="paper">
+            <tr>
+                <th class="cabecera_tabla">Fecha</th>
+                <th class="cabecera_tabla">Hora</th>
+                <th class="cabecera_tabla">From</th>
+                <th class="cabecera_tabla">Q</th>
+                <th class="cabecera_tabla">To</th>
+                <th class="cabecera_tabla">Q</th>
+                <th class="cabecera_tabla">P.U</th>
+            </tr>
+            {% for mov in movs %}
+            <tr>
+                <td>{{mov.date}}</td>
+                <td>{{mov.time}}</td>
+                <td>{{mov.moneda_from}}</td>
+                <td>{{mov.cantidad_from}}</td>
+                <td>{{mov.moneda_to}}</td>
+                <td>{{mov.cantidad_to}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </main>
     <footer class="pie-de-pgina">2022 - Todos los derechos reservados</footer>
 </body>
 
