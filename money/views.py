@@ -15,7 +15,7 @@ def inicio():
 
 @app.route("/purchase", methods=["GET", "POST"])
 def purchase():
-    return "página de compra"
+    return render_template("purchase.html")
 
 
 @app.route("/status")
