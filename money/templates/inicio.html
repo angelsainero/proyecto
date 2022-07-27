@@ -3,7 +3,12 @@
 {{ super() }}: Inicio
 {% endblock %}
 
+{%  block page_title %}
+Listado de Movimientos
+{% endblock %}
+
 {% block contenido %}
+{{ super ()}}
     <table class="paper">
         <tr>
             <th class="cabecera_tabla">Fecha</th>

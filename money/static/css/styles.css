@@ -36,3 +36,11 @@ table.paper {
     padding: 20px;
     border-top: #367bf0 solid 1px;
 }
+
+nav.main_menu a {
+    color: white;
+}
+
+h1.main_page_title {
+    text-align: center;
+}

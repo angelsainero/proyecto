@@ -14,12 +14,13 @@
     <header>
         Registro de movimientos de Criptomonedas
     </header>
-    <nav>
-        <a href="/">Inicio</a>|<a href="purchase.html"> Purchase</a>| Status
+    <nav class="main_menu">
+        <a href="/">Inicio</a>|<a href="\purchase"> Purchase</a>| Status
         
     </nav>
     <main>
         {% block contenido %}
+        <h1 class="main_page_title">{% block page_title %}{% endblock %}</h1>
         {% endblock %}
     </main>
     <footer class="pie_de_pagina">2022 - Todos los derechos reservados</footer>

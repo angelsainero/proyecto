@@ -1,5 +1,14 @@
 {% extends "base.html" %}
+{% block head_title %}
+{{ super() }}: Purchase
+{% endblock %}
+
+{%  block page_title %}
+Compra de monedas
+{% endblock %}
 
 {% block contenido %}
-hola
+{{ super ()}}
+
+<form action="/purchase" method="post"></form>
 {% endblock %}
