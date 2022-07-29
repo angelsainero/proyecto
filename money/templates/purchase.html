@@ -4,11 +4,58 @@
 {% endblock %}
 
 {%  block page_title %}
-Compra de monedas
+Compra de Criptos
 {% endblock %}
 
 {% block contenido %}
 {{ super ()}}
 
-<form action="/purchase" method="post"></form>
+<form class="paper" action="/purchase" method="post">
+    <label for="from">From:  </label>
+    <select name="from" id="from">
+    
+        <option value="EUR">EUR</option>
+        <option value="ETH">ETH</option>
+        <option value="BNB">BNB</option>
+        <option value="LUNA">LUNA</option>
+        <option value="SOL">SOL</option>
+        <option value="BTC">BTC</option>
+        <option value="BCH">BCH</option>
+        <option value="LINK">LINK</option>
+        <option value="ATOM">ATOM</option>
+        <option value="USDT">USDT</option>
+    </select>
+    
+    <label for="to">To:  </label>
+    <select name="to" id="to">
+    
+        <option value="EUR">EUR</option>
+        <option value="ETH">ETH</option>
+        <option value="BNB">BNB</option>
+        <option value="LUNA">LUNA</option>
+        <option value="SOL">SOL</option>
+        <option value="BTC">BTC</option>
+        <option value="BCH">BCH</option>
+        <option value="LINK">LINK</option>
+        <option value="ATOM">ATOM</option>
+        <option value="USDT">USDT</option>
+    </select>
+    
+    <br>
+    
+    <label for="q_from"> Q: </label>
+    <input type="text" name="q_from" id="q_from">
+    
+    <button type="button" name="calc" id="calc"><img src="\static\images\calculadora.png" height="30px"></button>
+
+    <label for="q_to"> Q: </label>
+    <a name="q_to" id="q_to"></a>
+    <br>
+    <label for="pu"> P.U.: </label>
+    <a name="pu" id="pu"></a>
+    <br>
+    <button type="reset" name="reset" id="reset"><img src="\static\images\borrar.png" height="30px"></button>
+    <button type="button" name="calc" id="calc"><img src="\static\images\enviar.png" height="30px"></button>
+    
+</form>
 {% endblock %}

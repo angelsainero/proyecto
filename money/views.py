@@ -18,6 +18,6 @@ def purchase():
     return render_template("purchase.html")
 
 
-@app.route("/status")
+@app.route("/status",  methods=["GET"])
 def status():
-    return "pagina de status"
+    return render_template("status.html")

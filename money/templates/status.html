@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block head_title %}
+{{ super() }}: Status
+{% endblock %}
+
+{%  block page_title %}
+Estado de la Inversión
+{% endblock %}
+
+{% block contenido %}
+{{ super ()}}
+
+<form class="paper" action="/purchase" method="post">
+    <label for="q_to"> Q: </label>
+    <a name="q_to" id="q_to"></a>
+    <br>
+    <label for="pu"> P.U.: </label>
+    <a name="pu" id="pu"></a>
+    <br>
+    <button type="return" name="return" id="return"><img src="\static\images\volver.png" height="30px"></button>
+
+    
+</form>
+{% endblock %}
