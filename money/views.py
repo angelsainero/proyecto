@@ -2,7 +2,7 @@ import requests
 from flask import render_template
 from . import app
 from .models import DBManager
-from .models import ExchangeRatesGetSpecificRateRequest
+
 
 RUTA = "data/money.db"
 
