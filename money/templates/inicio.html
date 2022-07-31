@@ -28,6 +28,7 @@ Listado de Movimientos
                 <td>{{mov.cantidad_from}}</td>
                 <td>{{mov.moneda_to}}</td>
                 <td>{{mov.cantidad_to}}</td>
+                <td>{{mov.cantidad_from / mov.cantidad_to}}</td>
             </tr>
             {% endfor %}
         {% else %}
@@ -37,7 +38,9 @@ Listado de Movimientos
         {% endif %}
         <tr>
             <td>
-                <button type="button" name="return" id="return">Status</button>            
+                <a href="/status">
+                    <button type="button" name="return" id="return">Status</button>            
+                </a>    
             </td>
             <td></td>
             <td></td>
@@ -45,7 +48,9 @@ Listado de Movimientos
             <td></td>
             <td></td>
             <td align="right">
-                   <button type="button" name="return" id="return">+</button>
+                <a href="/purchase">
+                   <button type="submit" name="return" id="return">+</button>
+                </a>
             </td>
         </tr>
     </table>
