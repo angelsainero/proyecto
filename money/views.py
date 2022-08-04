@@ -1,5 +1,6 @@
+
 import requests
-from flask import render_template
+from flask import render_template, request
 from . import app
 from .models import DBManager
 from .models import CriptoModel
@@ -15,12 +16,17 @@ def inicio():
     return render_template("inicio.html", movs=movimientos)
 
 
-@app.route("/purchase", methods=["GET", "POST"])
+@app.route("/purchase", methods=["POST", "GET"])
 def purchase():
-    cripto = CriptoModel("EUR", "BTC")
-    consultar = cripto.consultar_cambio()
-    total = cripto.cambio
-    return render_template("purchase.html", numero=total)
+    if request.method == "GET":
+        return render_template("purchase.html")
+    else:
+        moneda1 = request.form['moneda1']
+        moneda2 = request.form['moneda2']
+        cripto = CriptoModel(moneda1, moneda2)
+        consultar = cripto.consultar_cambio()
+        total = cripto.cambio
+        return render_template("purchase.html", numero=total)
 
 
 @app.route("/status",  methods=["GET"])

@@ -40,22 +40,3 @@ kata 19  flask - sql
     bbdd: 1:38:00
 
 
-https://rest.coinapi.io/v1/exchangerate/{base}/{quota}?time={time}&apikey={apikey}
-
-api_url = f"https: // rest.coinapi.io/v1/exchangerate/{base}/{quota}?time = {time} & apikey = {apikey}
-https://rest.coinapi.io/v1/exchanges?apikey=0B9C1C2F-3AC8-4639-9F7B-D2D34D469C67
-https://rest.coinapi.io/v1/exchangerate/BTC/USD?apikey=0B9C1C2F-3AC8-4639-9F7B-D2D34D469C67
-
-
-from coinapi_rest_v1.restapi import CoinAPIv1
-import datetime, sys
-
-test_key = sys.argv[1]
-
-api = CoinAPIv1(test_key)
-exchanges = api.metadata_list_exchanges()
-
-
-
-exchange_rate = api.exchange_rates_get_specific_rate('BTC', 'USD')
-print('Rate: %s' % exchange_rate['rate'])
