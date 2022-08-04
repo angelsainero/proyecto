@@ -18,6 +18,7 @@ def inicio():
 
 @app.route("/purchase", methods=["POST", "GET"])
 def purchase():
+<<<<<<< HEAD
     if request.method == "GET":
         return render_template("purchase.html")
     else:
@@ -27,6 +28,12 @@ def purchase():
         consultar = cripto.consultar_cambio()
         total = cripto.cambio
         return render_template("purchase.html", numero=total)
+=======
+    cripto = CriptoModel("EUR", "BTC")
+    consultar = cripto.consultar_cambio()
+    total = cripto.cambio
+    return render_template("purchase.html", numero=total)
+>>>>>>> d68ef624ec3a32988896b49c2113172464998834
 
 
 @app.route("/status",  methods=["GET"])
