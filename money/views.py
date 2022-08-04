@@ -1,9 +1,9 @@
 
-import requests
 from flask import render_template, request
 from . import app
 from .models import DBManager
 from .models import CriptoModel
+from .forms import movform
 
 
 RUTA = "data/money.db"
@@ -18,9 +18,9 @@ def inicio():
 
 @app.route("/purchase", methods=["POST", "GET"])
 def purchase():
-<<<<<<< HEAD
     if request.method == "GET":
-        return render_template("purchase.html")
+        formulario = movform()
+        return render_template("purchase.html", form=formulario)
     else:
         moneda1 = request.form['moneda1']
         moneda2 = request.form['moneda2']
@@ -28,12 +28,6 @@ def purchase():
         consultar = cripto.consultar_cambio()
         total = cripto.cambio
         return render_template("purchase.html", numero=total)
-=======
-    cripto = CriptoModel("EUR", "BTC")
-    consultar = cripto.consultar_cambio()
-    total = cripto.cambio
-    return render_template("purchase.html", numero=total)
->>>>>>> d68ef624ec3a32988896b49c2113172464998834
 
 
 @app.route("/status",  methods=["GET"])

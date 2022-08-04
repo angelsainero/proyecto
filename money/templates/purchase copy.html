@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block head_title %}
+{{ super() }}: Purchase
+{% endblock %}
+
+{%  block page_title %}
+Compra de Criptos
+{% endblock %}
+
+{% block contenido %}
+{{ super ()}}
+
+<form class="paper" action="/purchase" method="post">
+    
+    <label for="moneda1">From:  </label>
+    <select name="moneda1" id="moneda1">
+        <option value="EUR">EUR</option>
+        <option value="ETH">ETH</option>
+        <option value="BNB">BNB</option>
+        <option value="BTC">BTC</option>
+
+    
+    </select>
+    <label for="moneda2">To:  </label>
+    <select name="moneda2" id="moneda2">
+        
+        <option value="EUR">EUR</option>
+        <option value="ETH">ETH</option>
+        <option value="BNB">BNB</option>
+        <option value="BTC">BTC</option>
+
+    </select>
+    
+    <br>
+    
+    <label for="q_from"> Q: </label>
+    <input type="text" name="q_from" id="q_from">
+    
+    <button type="submit" name="calc" id="calc"><img src="\static\images\calculadora.png" height="30px"></button>
+
+    <label for="q_to"> Q: </label>
+    <a name="q_to" id="q_to">{{numero}}</a>
+    <br>
+    <label for="pu"> P.U.: </label>
+    <a name="pu" id="pu"></a>
+    <br>
+    <button type="reset" name="reset" id="reset"><img src="\static\images\borrar.png" height="30px"></button>
+    <button type="submit" name="calc" id="calc"><img src="\static\images\enviar.png" height="30px"></button>
+    
+</form>
+{% endblock %}

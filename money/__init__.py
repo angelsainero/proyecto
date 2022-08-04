@@ -17,3 +17,4 @@ if respuesta.status_code == 200:
 
 
 app = Flask(__name__)
+app.config.from_prefixed_env()

@@ -40,3 +40,6 @@ kata 19  flask - sql
     bbdd: 1:38:00
 
 
+forma de hacerlo sin POST clase 20 min 02:02:03
+
+wtforms kata 20 
