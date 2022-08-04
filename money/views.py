@@ -2,6 +2,7 @@ import requests
 from flask import render_template
 from . import app
 from .models import DBManager
+from .models import CriptoModel
 
 
 RUTA = "data/money.db"
@@ -16,7 +17,10 @@ def inicio():
 
 @app.route("/purchase", methods=["GET", "POST"])
 def purchase():
-    return render_template("purchase.html")
+    cripto = CriptoModel("EUR", "BTC")
+    consultar = cripto.consultar_cambio()
+    total = cripto.cambio
+    return render_template("purchase.html", numero=total)
 
 
 @app.route("/status",  methods=["GET"])
