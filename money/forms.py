@@ -12,4 +12,6 @@ class movform(FlaskForm):
         "EUR", "EUR"), ("ETH", "ETH"), ("BNB", "BNB"), ("BTC", "BTC")])
     cantidad = DecimalField("Cantidad", places=8)
     consultarapi = SubmitField("ConsultarAPI")
+    ratemoneda = DecimalField("Ratemoneda")
+    borrar = SubmitField("Borrar")
     enviar = SubmitField("Guardar")

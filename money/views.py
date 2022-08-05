@@ -20,14 +20,13 @@ def inicio():
 def purchase():
     if request.method == "GET":
         formulario = movform()
-        return render_template("purchase.html", form=formulario)
+        return render_template("purchase.html", formulario=formulario)
     else:
-        moneda1 = request.form['moneda1']
-        moneda2 = request.form['moneda2']
-        cripto = CriptoModel(moneda1, moneda2)
+        formulario = movform()
+        cripto = CriptoModel("EUR", "BTC")
         consultar = cripto.consultar_cambio()
         total = cripto.cambio
-        return render_template("purchase.html", numero=total)
+        return render_template("purchase.html", formulario=formulario, numero=total)
 
 
 @app.route("/status",  methods=["GET"])
