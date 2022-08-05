@@ -4,8 +4,9 @@ from wtforms import HiddenField, DateField, StringField, SelectField, DecimalFie
 
 
 class movform(FlaskForm):
-    id = HiddenField()
+
     fecha = HiddenField("Fecha")
+    hora = HiddenField("Hora")
     moneda1 = SelectField("From: ", choices=[(
         "EUR", "EUR"), ("ETH", "ETH"), ("BNB", "BNB"), ("BTC", "BTC")])
     moneda2 = SelectField("To: ", choices=[(
