@@ -24,26 +24,24 @@ def purchase():
     else:
         formulario = movform()
         if formulario.consultarapi.data:
-            cripto = CriptoModel("EUR", "BTC")
+            moneda1 = formulario.moneda1.data
+            moneda2 = formulario.moneda2.data
+
+            cripto = CriptoModel(moneda1, moneda2)
             consultar = cripto.consultar_cambio()
             total = cripto.cambio
-            return render_template("purchase.html", formulario=formulario, numero=total)
+            calculo = float(total)/float(formulario.cantidad.data)
+            return render_template("purchase.html", formulario=formulario, numero=total, calculo=calculo)
 
         if formulario.enviar.data:
-            formulario = movform()
+            formulario = movform(data=request.form)
             db = DBManager(RUTA)
-            params = (formulario.fecha.data, formulario.hora.data,
-                      formulario.moneda1.data, formulario.cantidad.data, formulario.moneda2.data)
-            consulta = "INSERT INTO movimientos (date, time, moneda_from, cantidad_from, moneda_to, cantidad_to) VALUES({params})"
-
-            resultado = db.consultaconparametros(consulta, params)
-            if resultado:
-                flash("Movimiento actualizado correctamente ;)",
-                      category="exito")
-
-                return redirect(url_for("inicio"))
-            else:
-                return "Ha fallado "
+            consulta = "INSERT INTO movimientos (moneda_from, cantidad_from, moneda_to) VALUES(?,?,?)"
+            cantidad = float(formulario.cantidad.data)
+            moneda1 = str(formulario.moneda1.data)
+            moneda2 = str(formulario.moneda2.data)
+            params = (moneda1, cantidad, moneda2)
+            db.consultaconparametros(consulta, params)
 
 
 @app.route("/status",  methods=["GET"])

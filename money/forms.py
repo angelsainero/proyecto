@@ -11,7 +11,7 @@ class movform(FlaskForm):
         "EUR", "EUR"), ("ETH", "ETH"), ("BNB", "BNB"), ("BTC", "BTC")])
     moneda2 = SelectField("To: ", choices=[(
         "EUR", "EUR"), ("ETH", "ETH"), ("BNB", "BNB"), ("BTC", "BTC")])
-    cantidad = DecimalField("Cantidad", places=8)
+    cantidad = DecimalField("Cantidad", places=6)
     consultarapi = SubmitField("ConsultarAPI")
     ratemoneda = DecimalField("Ratemoneda")
     borrar = SubmitField("Borrar")
