@@ -33,9 +33,16 @@ class DBManager:
     def consultaconparametros(self, consulta, params):
         conexion = sqlite3.connect(self.ruta)
         cursor = conexion.cursor()
-        cursor.execute(consulta, params)
-        conexion.commit()
+        resultado = False
+        try:
+            cursor.execute(consulta, params)
+            conexion.commit()
+            resultado = True
+        except Exception as error:
+            print("ERROR BD:", error)
+            conexion.rollback()
         conexion.close()
+        return resultado
 
 
 class APIError(Exception):

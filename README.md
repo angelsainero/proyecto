@@ -43,22 +43,3 @@ kata 19  flask - sql
 forma de hacerlo sin POST clase 20 min 02:02:03
 
 wtforms kata 20 
-
-
-      {{form.ratemoneda(readonly=true)}}
-
-
-    if request.method == "POST":
-        name = request.form['Nombre']
-        email = request.form['Email']
-        Mensaje = request.form['Mensaje']
-        respuesta_del_captcha = request.form['g-recaptcha-response']
-        
-        if comprobar_humano(respuesta_del_captcha):
-           #Si devuelve True
-            status = "Exito."
-            print (status)
-        else:
-           #Si devuelve False
-            status = "Error, vuelve a comprobar que no eres un robot."
-            print (status)
