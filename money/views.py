@@ -35,11 +35,13 @@ def purchase():
         consultar = cripto.consultar_cambio()
         total = cripto.cambio
         total = float(round(total, 10))
-        cantidad = float(round(cantidad, 10))
-        calculo = total/cantidad
-        calculo = float(round(calculo, 10))
 
+        cantidad = float(round(cantidad, 10))
+        calculo = cripto.cambio
+        calculo = float(round(calculo, 10))
+        total = total*cantidad
         if formulario.consultarapi.data:
+
             return render_template("purchase.html", formulario=formulario, numero=total, calculo=calculo)
 
         elif formulario.enviar.data:
