@@ -70,3 +70,30 @@ button {
     border: solid red;
 
 }
+
+.lista-errores {
+    background-color: rgba(200, 0, 0, .25);
+    color: darkred;
+    border: solid 2px darkred;
+    padding: 2rem;
+    font-size: 1rem;
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+}
+
+.icono-error {
+    margin-right: 1rem;
+    font-size: 32px;
+}
+
+.exito-flash {
+    background-color: rgba(0, 200, 0, .25);
+    color: darkgreen;
+    border: solid 2px darkgreen;
+    padding: 2rem;
+    font-size: 1rem;
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+}

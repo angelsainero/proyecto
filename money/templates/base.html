@@ -19,6 +19,20 @@
         
     </nav>
     <main>
+        {% with mensajes = get_flashed_messages() %}
+            {% if mensajes %}
+                <div class="exito-flash">
+                    <p>
+                        <ion-icon name="warning-sharp" class="icono-error"></ion-icon>
+                    </p>
+                    <div class="mensajes-flash">
+                        {% for msg in mensajes %}
+                            <p>{{ msg }}</p>
+                        {% endfor %}
+                    </div>      
+                </div>
+            {% endif %}
+        {% endwith %}
         {% block contenido %}
         <h1 class="main_page_title">{% block page_title %}{% endblock %}</h1>
         {% endblock %}

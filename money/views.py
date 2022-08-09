@@ -1,4 +1,5 @@
 
+from cProfile import label
 from time import time
 from flask import render_template, request, redirect, flash, url_for
 from . import app
@@ -25,7 +26,7 @@ def purchase():
         formulario = movform()
         return render_template("purchase.html", formulario=formulario)
     else:
-        formulario = movform()
+        formulario = movform(data=request.form)
 
         moneda1 = formulario.moneda1.data
         moneda2 = formulario.moneda2.data
@@ -41,23 +42,34 @@ def purchase():
         calculo = float(round(calculo, 10))
         total = total*cantidad
         if formulario.consultarapi.data:
-
-            return render_template("purchase.html", formulario=formulario, numero=total, calculo=calculo)
+            if formulario.validate():
+                return render_template("purchase.html", formulario=formulario, numero=total, calculo=calculo)
+            else:
+                return render_template("purchase.html", formulario=formulario, numero=total, calculo=calculo, errores=["Ha fallado la validacion de los datos"])
 
         elif formulario.enviar.data:
-
-            formulario = movform(data=request.form)
-            db = DBManager(RUTA)
-            consulta = "INSERT INTO movimientos (date, time, moneda_from, cantidad_from, moneda_to, cantidad_to) VALUES(?,?,?,?,?,?)"
-            cantidad = float(formulario.cantidad.data)
-            moneda1 = str(formulario.moneda1.data)
-            moneda2 = str(formulario.moneda2.data)
-            formulario.fecha.data = date.today()
-            fecha = formulario.fecha.data
-            formulario.hora.data = datetime.today().strftime("%H:%M:%S")
-            hora = formulario.hora.data
-            params = (fecha, hora, moneda1, cantidad, moneda2, total)
-            db.consultaconparametros(consulta, params)
+            if formulario.validate():
+                formulario = movform(data=request.form)
+                db = DBManager(RUTA)
+                consulta = "INSERT INTO movimientos (date, time, moneda_from, cantidad_from, moneda_to, cantidad_to) VALUES(?,?,?,?,?,?)"
+                cantidad = float(formulario.cantidad.data)
+                moneda1 = str(formulario.moneda1.data)
+                moneda2 = str(formulario.moneda2.data)
+                formulario.fecha.data = date.today()
+                fecha = formulario.fecha.data
+                formulario.hora.data = datetime.today().strftime("%H:%M:%S")
+                hora = formulario.hora.data
+                params = (fecha, hora, moneda1, cantidad, moneda2, total)
+                resultado = db.consultaconparametros(consulta, params)
+                if resultado:
+                    flash("Movimiento actualizado correctamente",
+                          category="exito")
+                    return redirect(url_for("inicio"))
+                return render_template("purchase.html", formulario=formulario, numero=total, calculo=calculo, errores=["Ha fallado la operación de guardar en la base de datos"])
+            else:
+                return render_template("purchase.html", formulario=formulario, numero=total, calculo=calculo, errores=["Ha fallado la validacion de los datos"])
+        else:
+            return render_template("purchase.html", formulario=formulario, numero=total, calculo=calculo)
 
 
 @app.route("/status",  methods=["GET"])
