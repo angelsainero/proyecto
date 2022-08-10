@@ -74,4 +74,13 @@ def purchase():
 
 @app.route("/status",  methods=["GET"])
 def status():
-    return render_template("status.html")
+    db = DBManager(RUTA)
+    euro_to = db.consultaresultado(
+        "SELECT sum(cantidad_to) FROM movimientos WHERE moneda_to='EUR'")
+    euro_to = euro_to[0]
+    euro_from = db.consultaresultado(
+        "SELECT sum(cantidad_from) FROM movimientos WHERE moneda_from='EUR'")
+    euro_from = euro_from[0]
+    saldo_euros_invertidos = euro_to-euro_from
+
+    return render_template("status.html", euro_to=euro_to, euro_from=euro_from, saldo_euros_invertidos=saldo_euros_invertidos)

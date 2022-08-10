@@ -44,6 +44,15 @@ class DBManager:
         conexion.close()
         return resultado
 
+    def consultaresultado(self, consulta):
+        conexion = sqlite3.connect(self.ruta)
+        cursor = conexion.cursor()
+        cursor.execute(consulta)
+        datos = cursor.fetchone()
+        conexion.commit()
+        conexion.close()
+        return datos
+
 
 class APIError(Exception):
     pass
