@@ -19,27 +19,16 @@ cp .env_template .env
 # Windows
 .\env\Scripts\activate
 copy .env_template .env
-
-
-flask run
 ```
 
 ## Instalación de requirements
 ```
 pip install -r requirements.txt
-````
+```
 
-
-
-Recursos
-kata 14 mnuto 50 - coinapi
-kata 16 1:35:50 - html 
-kata 17 02:05:20 - condicionales en el html
-kata 18 formularios
-kata 19  flask - sql
-    bbdd: 1:38:00
-
-
-forma de hacerlo sin POST clase 20 min 02:02:03
-
-wtforms kata 20 
+crear dentro de \money fichero .env con el siguiente contenido: 
+```
+FLASK_APP=run
+FLASK_ENV=development
+FLASK_SECRET_KEY=8f42a73054b1749f8f58848be5e6502c
+```
