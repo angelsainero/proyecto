@@ -1,5 +1,6 @@
 
 from cProfile import label
+from mmap import ALLOCATIONGRANULARITY
 from time import time
 from flask import render_template, request, redirect, flash, url_for
 from . import app
@@ -82,17 +83,36 @@ def status():
         "SELECT sum(cantidad_from) FROM movimientos WHERE moneda_from='EUR'")
     euro_from = euro_from[0]
     saldo_euros_invertidos = euro_to-euro_from
+    total_euros_ivertidos = euro_from
     # total monedas from convertidas a EUROS
-    valorcrypto = db.consultaresultado_totales(
+    valorcryptofrom = db.consultaresultado_totales(
         "SELECT moneda_from, sum(cantidad_from) FROM movimientos GROUP BY moneda_from")
 
-    totales = []
-    for valor in valorcrypto:
-        cripto = CriptoModel(valor[0], "EUR")
+    totales_from = []
+    for valor_from in valorcryptofrom:
+        cripto = CriptoModel(valor_from[0], "EUR")
         resultado = cripto.consultar_cambio()
         resultado = cripto.cambio
         resultado = float(resultado)
-        resultado = resultado*valor[1]
-        resultado = totales.append(resultado)
+        resultado = resultado*valor_from[1]
+        resultado = totales_from.append(resultado)
+    sumavalorfrom = sum(totales_from)
 
-    return render_template("status.html", euro_to=euro_to, euro_from=euro_from, saldo_euros_invertidos=saldo_euros_invertidos, valorcrypto=valorcrypto, totales=totales)
+# total monedas to convertidas a euros
+    valorcryptoto = db.consultaresultado_totales(
+        "SELECT moneda_from, sum(cantidad_to) FROM movimientos GROUP BY moneda_to")
+
+    totales_to = []
+    for valor_to in valorcryptoto:
+        cripto = CriptoModel(valor_to[0], "EUR")
+        resultado = cripto.consultar_cambio()
+        resultado = cripto.cambio
+        resultado = float(resultado)
+        resultado = resultado*valor_to[1]
+        resultado = totales_to.append(resultado)
+    sumavalorto = sum(totales_to)
+
+    atrapada = sumavalorto-sumavalorfrom
+    valoractual = total_euros_ivertidos+saldo_euros_invertidos+atrapada
+
+    return render_template("status.html", euro_to=euro_to, euro_from=euro_from, saldo_euros_invertidos=saldo_euros_invertidos, valoractual=valoractual)
