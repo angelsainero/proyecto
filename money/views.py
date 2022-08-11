@@ -82,5 +82,17 @@ def status():
         "SELECT sum(cantidad_from) FROM movimientos WHERE moneda_from='EUR'")
     euro_from = euro_from[0]
     saldo_euros_invertidos = euro_to-euro_from
+    # total monedas from convertidas a EUROS
+    valorcrypto = db.consultaresultado_totales(
+        "SELECT moneda_from, sum(cantidad_from) FROM movimientos GROUP BY moneda_from")
 
-    return render_template("status.html", euro_to=euro_to, euro_from=euro_from, saldo_euros_invertidos=saldo_euros_invertidos)
+    totales = []
+    for valor in valorcrypto:
+        cripto = CriptoModel(valor[0], "EUR")
+        resultado = cripto.consultar_cambio()
+        resultado = cripto.cambio
+        resultado = float(resultado)
+        resultado = resultado*valor[1]
+        resultado = totales.append(resultado)
+
+    return render_template("status.html", euro_to=euro_to, euro_from=euro_from, saldo_euros_invertidos=saldo_euros_invertidos, valorcrypto=valorcrypto, totales=totales)
