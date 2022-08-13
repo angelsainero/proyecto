@@ -24,6 +24,7 @@ main {
 table.paper {
     width: 100%;
     margin: 10px 20px;
+
 }
 
 .cabecera_tabla {
@@ -46,11 +47,10 @@ h1.main_page_title {
 }
 
 
-
-
 form.paper {
-    width: 100%;
+    width: 70%;
     margin: 10px 20px;
+
 }
 
 button {
@@ -84,6 +84,17 @@ button {
     background-color: rgba(0, 200, 0, .25);
     color: darkgreen;
     border: solid 2px darkgreen;
+    padding: 2rem;
+    font-size: 1rem;
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+}
+
+.fallo-flash {
+    background-color: rgba(195, 109, 119, 0.25);
+    color: red;
+    border: solid 2px red;
     padding: 2rem;
     font-size: 1rem;
     margin: 1rem 0;

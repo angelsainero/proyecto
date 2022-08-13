@@ -1,4 +1,5 @@
 
+
 from flask import render_template, request, redirect, flash, url_for
 from . import app
 from .models import DBManager
@@ -29,16 +30,21 @@ def purchase():
         moneda1 = formulario.moneda1.data
         moneda2 = formulario.moneda2.data
         cantidad = formulario.cantidad.data
+        try:
+            cripto = CriptoModel(moneda1, moneda2)
+            consultar = cripto.consultar_cambio()
+            total = cripto.cambio
+            total = float(round(total, 10))
 
-        cripto = CriptoModel(moneda1, moneda2)
-        consultar = cripto.consultar_cambio()
-        total = cripto.cambio
-        total = float(round(total, 10))
+            cantidad = float(round(cantidad, 10))
+            calculo = cripto.cambio
+            calculo = float(round(calculo, 10))
+            total = total*cantidad
+        except:
+            flash("Error al consultar API",
+                  category="fallo")
+            return redirect(url_for("purchase"))
 
-        cantidad = float(round(cantidad, 10))
-        calculo = cripto.cambio
-        calculo = float(round(calculo, 10))
-        total = total*cantidad
         if formulario.consultarapi.data:
             if formulario.validate():
                 return render_template("purchase.html", formulario=formulario, numero=total, calculo=calculo)
