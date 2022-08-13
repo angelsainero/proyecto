@@ -1,7 +1,7 @@
 from datetime import date, datetime
 from flask_wtf import FlaskForm
-from wtforms import HiddenField, DateField, StringField, SelectField, DecimalField, SubmitField, TimeField, IntegerField
-from wtforms.validators import DataRequired, Length
+from wtforms import HiddenField, DateField, StringField, SelectField, SubmitField, TimeField, IntegerField
+from wtforms.validators import DataRequired
 
 
 class movform(FlaskForm):

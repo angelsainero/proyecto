@@ -1,7 +1,4 @@
 
-from cProfile import label
-from mmap import ALLOCATIONGRANULARITY
-from time import time
 from flask import render_template, request, redirect, flash, url_for
 from . import app
 from .models import DBManager
@@ -83,6 +80,7 @@ def status():
         "SELECT sum(cantidad_from) FROM movimientos WHERE moneda_from='EUR'")
     euro_from = euro_from[0]
     saldo_euros_invertidos = euro_to-euro_from
+    saldo_euros_invertidos = round(saldo_euros_invertidos, 8)
     total_euros_ivertidos = euro_from
     # total monedas from convertidas a EUROS
     valorcryptofrom = db.consultaresultado_totales(
@@ -100,7 +98,7 @@ def status():
 
 # total monedas to convertidas a euros
     valorcryptoto = db.consultaresultado_totales(
-        "SELECT moneda_from, sum(cantidad_to) FROM movimientos GROUP BY moneda_to")
+        "SELECT moneda_to, sum(cantidad_to) FROM movimientos GROUP BY moneda_to")
 
     totales_to = []
     for valor_to in valorcryptoto:
@@ -114,5 +112,6 @@ def status():
 
     atrapada = sumavalorto-sumavalorfrom
     valoractual = total_euros_ivertidos+saldo_euros_invertidos+atrapada
+    valoractual = round(valoractual, 8)
 
     return render_template("status.html", euro_to=euro_to, euro_from=euro_from, saldo_euros_invertidos=saldo_euros_invertidos, valoractual=valoractual)

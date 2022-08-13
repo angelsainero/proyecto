@@ -11,9 +11,7 @@ Compra de Criptos
 {{ super ()}}
 
 <form class="paper" action="/purchase" method="post">
-    {{formulario.csrf_token}}
-
-    <div class="paper">
+    {{formulario.csrf_token}}    
         
         {{formulario.moneda1.label}}
         {{formulario.moneda1}}
@@ -27,12 +25,9 @@ Compra de Criptos
         <br>
         <p>P.U.: {{calculo}}</p>
        
-    <br>
-    
-        {{formulario.borrar}}
+    <br>     
+        <button type="reset" name="return" id="return"> Borrar </button>
         {{formulario.enviar}}
-    </div>
-
     
 </form>
 {% endblock %}
