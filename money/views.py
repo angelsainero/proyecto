@@ -6,7 +6,7 @@ from .forms import movform
 from datetime import date, datetime
 
 
-RUTA = "data/mone.db"
+RUTA = "data/money.db"
 
 
 @app.route("/")
@@ -27,28 +27,28 @@ def purchase():
     if request.method == "GET":
         formulario = movform()
         return render_template("purchase.html", formulario=formulario)
-    else:  # SI EL MÉTODO ES POST
+
+    else:  # SI EL MÉTODO ES POST ENTRAN LOS DOS BOTONES
         formulario = movform(data=request.form)
-
-        moneda1 = formulario.moneda1.data
-        moneda2 = formulario.moneda2.data
-        cantidad = formulario.cantidad.data
-        # SI HAY RESULTADO AL CONSULTAR LA API
-        cripto = CriptoModel(moneda1, moneda2)
-        consultar = cripto.consultar_cambio()
-        total = cripto.cambio
-        total = float(round(total, 10))
-
-        cantidad = float(round(cantidad, 10))
-        calculo = cripto.cambio
-        calculo = float(round(calculo, 10))
-        total = total*cantidad
-
         if formulario.consultarapi.data:  # SI PULSAMOS BUTTON CONSULTAR API
-            if formulario.validate():
+            try:
+                moneda1 = formulario.moneda1.data
+                moneda2 = formulario.moneda2.data
+                cantidad = formulario.cantidad.data
+
+                cripto = CriptoModel(moneda1, moneda2)
+                consultar = cripto.consultar_cambio()
+                total = cripto.cambio
+                total = float(round(total, 10))
+
+                cantidad = float(round(cantidad, 10))
+                calculo = cripto.cambio
+                calculo = float(round(calculo, 10))
+                total = total*cantidad
+
                 return render_template("purchase.html", formulario=formulario, numero=total, calculo=calculo)
-            else:
-                return render_template("purchase.html", formulario=formulario, numero=total, errores=["Ha fallado la validacion de los datos"])
+            except:
+                return render_template("purchase.html", formulario=formulario, errores=["Ha fallado la Conexión a la API"])
 
         elif formulario.enviar.data:  # SI PULSAMO BUTTON ENVIAR
             if formulario.validate():  # SI VALIDA EL FORMULARIO
@@ -94,37 +94,40 @@ def status():
         # total monedas from convertidas a EUROS
         valorcryptofrom = db.consultaresultado_totales(
             "SELECT moneda_from, sum(cantidad_from) FROM movimientos GROUP BY moneda_from")
-
         totales_from = []
-        for valor_from in valorcryptofrom:
-            cripto = CriptoModel(valor_from[0], "EUR")
-            resultado = cripto.consultar_cambio()
-            resultado = cripto.cambio
-            resultado = float(resultado)
-            resultado = resultado*valor_from[1]
-            resultado = totales_from.append(resultado)
-        sumavalorfrom = sum(totales_from)
+        try:
 
-    # total monedas to convertidas a euros
-        valorcryptoto = db.consultaresultado_totales(
-            "SELECT moneda_to, sum(cantidad_to) FROM movimientos GROUP BY moneda_to")
+            for valor_from in valorcryptofrom:
+                cripto = CriptoModel(valor_from[0], "EUR")
+                resultado = cripto.consultar_cambio()
+                resultado = cripto.cambio
+                resultado = float(resultado)
+                resultado = resultado*valor_from[1]
+                resultado = totales_from.append(resultado)
+            sumavalorfrom = sum(totales_from)
 
-        totales_to = []
-        # SE CREA BUCLE Y SE CONVIERTE CADA LINEA A EUROS ALMACENÁNDOLA EN totales_to
-        for valor_to in valorcryptoto:
-            cripto = CriptoModel(valor_to[0], "EUR")
-            resultado = cripto.consultar_cambio()
-            resultado = cripto.cambio
-            resultado = float(resultado)
-            resultado = resultado*valor_to[1]
-            resultado = totales_to.append(resultado)
-        # SE SUMA TODOS LOS ITEMS DE LA LISTA
-        sumavalorto = sum(totales_to)
+        # total monedas to convertidas a euros
+            valorcryptoto = db.consultaresultado_totales(
+                "SELECT moneda_to, sum(cantidad_to) FROM movimientos GROUP BY moneda_to")
 
-        atrapada = sumavalorto-sumavalorfrom
-        valoractual = total_euros_ivertidos+saldo_euros_invertidos+atrapada
-        valoractual = round(valoractual, 8)
-        return render_template("status.html", euro_to=euro_to, euro_from=euro_from, saldo_euros_invertidos=saldo_euros_invertidos, valoractual=valoractual)
+            totales_to = []
+            # SE CREA BUCLE Y SE CONVIERTE CADA LINEA A EUROS ALMACENÁNDOLA EN totales_to
+            for valor_to in valorcryptoto:
+                cripto = CriptoModel(valor_to[0], "EUR")
+                resultado = cripto.consultar_cambio()
+                resultado = cripto.cambio
+                resultado = float(resultado)
+                resultado = resultado*valor_to[1]
+                resultado = totales_to.append(resultado)
+            # SE SUMA TODOS LOS ITEMS DE LA LISTA
+            sumavalorto = sum(totales_to)
+
+            atrapada = sumavalorto-sumavalorfrom
+            valoractual = total_euros_ivertidos+saldo_euros_invertidos+atrapada
+            valoractual = round(valoractual, 8)
+            return render_template("status.html", euro_to=euro_to, euro_from=euro_from, saldo_euros_invertidos=saldo_euros_invertidos, valoractual=valoractual)
+        except:
+            return render_template("status.html", errores=["Ha fallado la Conexión a la API"])
     except:
         flash("Error al conectar con la BBDD",
               category="fallo")
