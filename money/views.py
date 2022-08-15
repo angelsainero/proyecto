@@ -23,6 +23,8 @@ def inicio():
 
 @app.route("/purchase", methods=["POST", "GET"])
 def purchase():
+    pulsadoboton = False
+
     # SI EL METODO ES GET PRESENTA EL FORMULARIO
     if request.method == "GET":
         formulario = movform()
@@ -30,27 +32,24 @@ def purchase():
 
     else:  # SI EL MÉTODO ES POST ENTRAN LOS DOS BOTONES
         formulario = movform(data=request.form)
+        moneda1 = formulario.moneda1.data
+        moneda2 = formulario.moneda2.data
+        cantidad = formulario.cantidad.data
+
+        cripto = CriptoModel(moneda1, moneda2)
+        consultar = cripto.consultar_cambio()
+        total = cripto.cambio
+        total = float(round(total, 10))
+
+        cantidad = float(round(cantidad, 10))
+        calculo = cripto.cambio
+        calculo = float(round(calculo, 10))
+        total = total*cantidad
+
         if formulario.consultarapi.data:  # SI PULSAMOS BUTTON CONSULTAR API
-            try:
-                moneda1 = formulario.moneda1.data
-                moneda2 = formulario.moneda2.data
-                cantidad = formulario.cantidad.data
+            return render_template("purchase.html", formulario=formulario, numero=total, calculo=calculo)
 
-                cripto = CriptoModel(moneda1, moneda2)
-                consultar = cripto.consultar_cambio()
-                total = cripto.cambio
-                total = float(round(total, 10))
-
-                cantidad = float(round(cantidad, 10))
-                calculo = cripto.cambio
-                calculo = float(round(calculo, 10))
-                total = total*cantidad
-
-                return render_template("purchase.html", formulario=formulario, numero=total, calculo=calculo)
-            except:
-                return render_template("purchase.html", formulario=formulario, errores=["Ha fallado la Conexión a la API"])
-
-        elif formulario.enviar.data:  # SI PULSAMO BUTTON ENVIAR
+        if formulario.enviar.data:  # SI PULSAMO BUTTON ENVIAR
             if formulario.validate():  # SI VALIDA EL FORMULARIO
                 formulario = movform(data=request.form)
                 db = DBManager(RUTA)
@@ -64,16 +63,19 @@ def purchase():
                 hora = formulario.hora.data
                 params = (fecha, hora, moneda1, cantidad, moneda2, total)
                 resultado = db.consultaconparametros(consulta, params)
+
                 if resultado:  # SI INSERTA EN BBDD
+
                     flash("Movimiento Actualizado Correctamente",
                           category="exito")
                     return redirect(url_for("inicio"))
+
                 # SI NO INSERTA EN BBDD
                 else:
-                    return render_template("purchase.html", formulario=formulario, numero=total,  errores=["Ha fallado la conexión a la Base de Datos"])
+                    return render_template("purchase.html", formulario=formulario, numero=total, errores=["Ha fallado la conexión a la Base de Datos"])
 
             else:  # SI NO VALIDA EL FORMULARIO
-                return render_template("purchase.html", formulario=formulario, numero=total,  errores=["Ha fallado la validacion de los datos"])
+                return render_template("purchase.html", formulario=formulario, numero=total, errores=["Ha fallado la validacion de los datos"])
         else:  # SI PULSAMOS EL BOTÓN QUE NOS QUEDA, BORRAR (RECARGA PAGINA)
             return render_template("purchase.html", formulario=formulario, numero=total)
 
