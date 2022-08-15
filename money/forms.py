@@ -17,3 +17,4 @@ class movform(FlaskForm):
     consultarapi = SubmitField("ConsultarAPI")
     borrar = SubmitField("Borrar")
     enviar = SubmitField("Guardar")
+    textoapi = StringField()

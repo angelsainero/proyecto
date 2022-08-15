@@ -48,8 +48,8 @@ h1.main_page_title {
 
 
 form.paper {
-    width: 70%;
-    margin: 10px 20px;
+    width: 60%;
+    margin: 10px 13rem;
 
 }
 
@@ -75,12 +75,10 @@ button {
     align-items: center;
 }
 
-.icono-error {
-    margin-right: 1rem;
-    font-size: 32px;
-}
 
-.exito-flash {
+
+
+.exito {
     background-color: rgba(0, 200, 0, .25);
     color: darkgreen;
     border: solid 2px darkgreen;
@@ -91,7 +89,8 @@ button {
     align-items: center;
 }
 
-.fallo-flash {
+
+.fallo {
     background-color: rgba(195, 109, 119, 0.25);
     color: red;
     border: solid 2px red;
@@ -100,4 +99,10 @@ button {
     margin: 1rem 0;
     display: flex;
     align-items: center;
+}
+
+
+.icono-error {
+    margin-right: 1rem;
+    font-size: 32px;
 }

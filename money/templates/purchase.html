@@ -10,6 +10,21 @@ Compra de Criptos
 {% block contenido %}
 {{ super ()}}
 
+{% if errores %}
+  <div class="lista-errores">
+    <p>
+      <ion-icon name="warning-sharp" class="icono-error"></ion-icon>
+    </p>
+    <div>
+      {% for error in errores %}
+        <p>{{ error }}</p>
+      {% endfor %}
+
+      {{ formulario.errors }}
+    </div>
+  </div>
+{% endif %}
+
 <form class="paper" action="/purchase" method="post">
     {{formulario.csrf_token}}    
         

@@ -10,12 +10,26 @@ Estado de la Inversión
 {% block contenido %}
 {{ super ()}}
 
-<form class="paper" action="/purchase" method="post">
-    <label for="q_to"> Invertido: {{saldo_euros_invertidos}} </label>
+{% if errores %}
+  <div class="fallo">
+   
+    <div>
+      {% for error in errores %}
+        <p>{{ error }}</p>
+      {% endfor %}
+      
+      {{ formulario.errors }}
+    </div>
+  </div>
+{% endif %}
+
+<form class="paper" action="/purchase" method="GET">
+    <label for="q_to"> Invertido:  {{saldo_euros_invertidos}} </label>
     <a name="q_to" id="q_to"></a>
     <br>
-    <label for="pu"> Valor Actual: {{valoractual}}</label>
+    <label for="pu"> Valor Actual:  {{valoractual}}</label>
     <a name="pu" id="pu"></a>
+    <br>
     <br>
     <button type="return" name="return" id="return"><img src="\static\images\volver.png" height="30px"></button>
 

@@ -1,5 +1,3 @@
-
-
 from flask import render_template, request, redirect, flash, url_for
 from . import app
 from .models import DBManager
@@ -8,51 +6,52 @@ from .forms import movform
 from datetime import date, datetime
 
 
-RUTA = "data/money.db"
+RUTA = "data/mone.db"
 
 
 @app.route("/")
 def inicio():
-    db = DBManager(RUTA)
-    movimientos = db.consultaSQL("SELECT * from movimientos")
-    return render_template("inicio.html", movs=movimientos)
+    try:
+        db = DBManager(RUTA)
+        movimientos = db.consultaSQL("SELECT * from movimientos")
+        return render_template("inicio.html", movs=movimientos)
+    except:
+        flash("Error al conectar con la BBDD",
+              category="fallo")
+        return render_template("inicio.html")
 
 
 @app.route("/purchase", methods=["POST", "GET"])
 def purchase():
-
+    # SI EL METODO ES GET PRESENTA EL FORMULARIO
     if request.method == "GET":
         formulario = movform()
         return render_template("purchase.html", formulario=formulario)
-    else:
+    else:  # SI EL MÉTODO ES POST
         formulario = movform(data=request.form)
 
         moneda1 = formulario.moneda1.data
         moneda2 = formulario.moneda2.data
         cantidad = formulario.cantidad.data
-        try:
-            cripto = CriptoModel(moneda1, moneda2)
-            consultar = cripto.consultar_cambio()
-            total = cripto.cambio
-            total = float(round(total, 10))
+        # SI HAY RESULTADO AL CONSULTAR LA API
+        cripto = CriptoModel(moneda1, moneda2)
+        consultar = cripto.consultar_cambio()
+        total = cripto.cambio
+        total = float(round(total, 10))
 
-            cantidad = float(round(cantidad, 10))
-            calculo = cripto.cambio
-            calculo = float(round(calculo, 10))
-            total = total*cantidad
-        except:
-            flash("Error al consultar API",
-                  category="fallo")
-            return redirect(url_for("purchase"))
+        cantidad = float(round(cantidad, 10))
+        calculo = cripto.cambio
+        calculo = float(round(calculo, 10))
+        total = total*cantidad
 
-        if formulario.consultarapi.data:
+        if formulario.consultarapi.data:  # SI PULSAMOS BUTTON CONSULTAR API
             if formulario.validate():
                 return render_template("purchase.html", formulario=formulario, numero=total, calculo=calculo)
             else:
-                return render_template("purchase.html", formulario=formulario, numero=total, calculo=calculo, errores=["Ha fallado la validacion de los datos"])
+                return render_template("purchase.html", formulario=formulario, numero=total, errores=["Ha fallado la validacion de los datos"])
 
-        elif formulario.enviar.data:
-            if formulario.validate():
+        elif formulario.enviar.data:  # SI PULSAMO BUTTON ENVIAR
+            if formulario.validate():  # SI VALIDA EL FORMULARIO
                 formulario = movform(data=request.form)
                 db = DBManager(RUTA)
                 consulta = "INSERT INTO movimientos (date, time, moneda_from, cantidad_from, moneda_to, cantidad_to) VALUES(?,?,?,?,?,?)"
@@ -65,59 +64,68 @@ def purchase():
                 hora = formulario.hora.data
                 params = (fecha, hora, moneda1, cantidad, moneda2, total)
                 resultado = db.consultaconparametros(consulta, params)
-                if resultado:
-                    flash("Movimiento actualizado correctamente",
+                if resultado:  # SI INSERTA EN BBDD
+                    flash("Movimiento Actualizado Correctamente",
                           category="exito")
                     return redirect(url_for("inicio"))
-                return render_template("purchase.html", formulario=formulario, numero=total, calculo=calculo, errores=["Ha fallado la operación de guardar en la base de datos"])
-            else:
-                return render_template("purchase.html", formulario=formulario, numero=total, calculo=calculo, errores=["Ha fallado la validacion de los datos"])
-        else:
-            return render_template("purchase.html", formulario=formulario, numero=total, calculo=calculo)
+                # SI NO INSERTA EN BBDD
+                else:
+                    return render_template("purchase.html", formulario=formulario, numero=total,  errores=["Ha fallado la conexión a la Base de Datos"])
+
+            else:  # SI NO VALIDA EL FORMULARIO
+                return render_template("purchase.html", formulario=formulario, numero=total,  errores=["Ha fallado la validacion de los datos"])
+        else:  # SI PULSAMOS EL BOTÓN QUE NOS QUEDA, BORRAR (RECARGA PAGINA)
+            return render_template("purchase.html", formulario=formulario, numero=total)
 
 
 @app.route("/status",  methods=["GET"])
 def status():
-    db = DBManager(RUTA)
-    euro_to = db.consultaresultado(
-        "SELECT sum(cantidad_to) FROM movimientos WHERE moneda_to='EUR'")
-    euro_to = euro_to[0]
-    euro_from = db.consultaresultado(
-        "SELECT sum(cantidad_from) FROM movimientos WHERE moneda_from='EUR'")
-    euro_from = euro_from[0]
-    saldo_euros_invertidos = euro_to-euro_from
-    saldo_euros_invertidos = round(saldo_euros_invertidos, 8)
-    total_euros_ivertidos = euro_from
-    # total monedas from convertidas a EUROS
-    valorcryptofrom = db.consultaresultado_totales(
-        "SELECT moneda_from, sum(cantidad_from) FROM movimientos GROUP BY moneda_from")
+    try:
+        db = DBManager(RUTA)
+        euro_to = db.consultaresultado(
+            "SELECT sum(cantidad_to) FROM movimientos WHERE moneda_to='EUR'")
+        euro_to = euro_to[0]
+        euro_from = db.consultaresultado(
+            "SELECT sum(cantidad_from) FROM movimientos WHERE moneda_from='EUR'")
+        euro_from = euro_from[0]
+        saldo_euros_invertidos = euro_to-euro_from
+        saldo_euros_invertidos = round(saldo_euros_invertidos, 8)
+        total_euros_ivertidos = euro_from
+        # total monedas from convertidas a EUROS
+        valorcryptofrom = db.consultaresultado_totales(
+            "SELECT moneda_from, sum(cantidad_from) FROM movimientos GROUP BY moneda_from")
 
-    totales_from = []
-    for valor_from in valorcryptofrom:
-        cripto = CriptoModel(valor_from[0], "EUR")
-        resultado = cripto.consultar_cambio()
-        resultado = cripto.cambio
-        resultado = float(resultado)
-        resultado = resultado*valor_from[1]
-        resultado = totales_from.append(resultado)
-    sumavalorfrom = sum(totales_from)
+        totales_from = []
+        for valor_from in valorcryptofrom:
+            cripto = CriptoModel(valor_from[0], "EUR")
+            resultado = cripto.consultar_cambio()
+            resultado = cripto.cambio
+            resultado = float(resultado)
+            resultado = resultado*valor_from[1]
+            resultado = totales_from.append(resultado)
+        sumavalorfrom = sum(totales_from)
 
-# total monedas to convertidas a euros
-    valorcryptoto = db.consultaresultado_totales(
-        "SELECT moneda_to, sum(cantidad_to) FROM movimientos GROUP BY moneda_to")
+    # total monedas to convertidas a euros
+        valorcryptoto = db.consultaresultado_totales(
+            "SELECT moneda_to, sum(cantidad_to) FROM movimientos GROUP BY moneda_to")
 
-    totales_to = []
-    for valor_to in valorcryptoto:
-        cripto = CriptoModel(valor_to[0], "EUR")
-        resultado = cripto.consultar_cambio()
-        resultado = cripto.cambio
-        resultado = float(resultado)
-        resultado = resultado*valor_to[1]
-        resultado = totales_to.append(resultado)
-    sumavalorto = sum(totales_to)
+        totales_to = []
+        # SE CREA BUCLE Y SE CONVIERTE CADA LINEA A EUROS ALMACENÁNDOLA EN totales_to
+        for valor_to in valorcryptoto:
+            cripto = CriptoModel(valor_to[0], "EUR")
+            resultado = cripto.consultar_cambio()
+            resultado = cripto.cambio
+            resultado = float(resultado)
+            resultado = resultado*valor_to[1]
+            resultado = totales_to.append(resultado)
+        # SE SUMA TODOS LOS ITEMS DE LA LISTA
+        sumavalorto = sum(totales_to)
 
-    atrapada = sumavalorto-sumavalorfrom
-    valoractual = total_euros_ivertidos+saldo_euros_invertidos+atrapada
-    valoractual = round(valoractual, 8)
-
-    return render_template("status.html", euro_to=euro_to, euro_from=euro_from, saldo_euros_invertidos=saldo_euros_invertidos, valoractual=valoractual)
+        atrapada = sumavalorto-sumavalorfrom
+        valoractual = total_euros_ivertidos+saldo_euros_invertidos+atrapada
+        valoractual = round(valoractual, 8)
+        return render_template("status.html", euro_to=euro_to, euro_from=euro_from, saldo_euros_invertidos=saldo_euros_invertidos, valoractual=valoractual)
+    except:
+        flash("Error al conectar con la BBDD",
+              category="fallo")
+        return render_template("status.html")
