@@ -32,25 +32,28 @@ def purchase():
         return render_template("purchase.html", formulario=formulario)
 
     else:  # SI EL MÉTODO ES POST ENTRAN LOS DOS BOTONES
+        try:
+            formulario = movform(data=request.form)
+            moneda1 = formulario.moneda1.data
+            moneda2 = formulario.moneda2.data
+            cantidad = formulario.cantidad.data
 
-        formulario = movform(data=request.form)
-        moneda1 = formulario.moneda1.data
-        moneda2 = formulario.moneda2.data
-        cantidad = formulario.cantidad.data
+            cripto = CriptoModel(moneda1, moneda2)
+            consultar = cripto.consultar_cambio()
+            total = cripto.cambio
+            total = float(round(total, 10))
 
-        cripto = CriptoModel(moneda1, moneda2)
-        consultar = cripto.consultar_cambio()
-        total = cripto.cambio
-        total = float(round(total, 10))
+            cantidad = float(round(cantidad, 10))
+            calculo = cripto.cambio
+            calculo = float(round(calculo, 10))
+            total = total*cantidad
 
-        cantidad = float(round(cantidad, 10))
-        calculo = cripto.cambio
-        calculo = float(round(calculo, 10))
-        total = total*cantidad
+            if formulario.consultarapi.data:  # SI PULSAMOS BUTTON CONSULTAR API
 
-        if formulario.consultarapi.data:  # SI PULSAMOS BUTTON CONSULTAR API
-            pulsado = True
-            return render_template("purchase.html", formulario=formulario, numero=total, calculo=calculo)
+                pulsado = True
+                return render_template("purchase.html", formulario=formulario, numero=total, calculo=calculo)
+        except:
+            return render_template("purchase.html", formulario=formulario, errores=["Ha fallado la consulta a la API"])
 
         if formulario.enviar.data:  # SI PULSAMO BUTTON ENVIAR
             if pulsado == True:  # SI PREVIAMENTE SE HA PULSADO EL BOTÓN DE LA API
