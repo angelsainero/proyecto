@@ -2,7 +2,7 @@ header {
     background-color: #367bf0;
     color: white;
     height: 100px;
-    font-size: x-large;
+    font-size: xx-large;
     line-height: 100px;
     text-align: center;
 }
@@ -42,14 +42,14 @@ nav.main_menu a {
     color: white;
 }
 
-h1.main_page_title {
+h2.main_page_title {
     text-align: center;
 }
 
 
 form.paper {
-    width: 60%;
-    margin: 10px 13rem;
+    width: 70%;
+    margin: 10px 10rem;
 
 }
 
