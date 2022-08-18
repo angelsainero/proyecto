@@ -1,3 +1,4 @@
+from operator import truediv
 from flask import render_template, request, redirect, flash, url_for
 from . import app
 from .models import DBManager
@@ -23,14 +24,15 @@ def inicio():
 
 @app.route("/purchase", methods=["POST", "GET"])
 def purchase():
-    pulsadoboton = False
+    global pulsado
 
-    # SI EL METODO ES GET PRESENTA EL FORMULARIO
-    if request.method == "GET":
+    if request.method == "GET":  # SI EL METODO ES GET PRESENTA EL FORMULARIO
         formulario = movform()
+        pulsado = False
         return render_template("purchase.html", formulario=formulario)
 
     else:  # SI EL MÉTODO ES POST ENTRAN LOS DOS BOTONES
+
         formulario = movform(data=request.form)
         moneda1 = formulario.moneda1.data
         moneda2 = formulario.moneda2.data
@@ -47,37 +49,43 @@ def purchase():
         total = total*cantidad
 
         if formulario.consultarapi.data:  # SI PULSAMOS BUTTON CONSULTAR API
+            pulsado = True
             return render_template("purchase.html", formulario=formulario, numero=total, calculo=calculo)
 
         if formulario.enviar.data:  # SI PULSAMO BUTTON ENVIAR
-            if formulario.validate():  # SI VALIDA EL FORMULARIO
-                formulario = movform(data=request.form)
-                db = DBManager(RUTA)
-                consulta = "INSERT INTO movimientos (date, time, moneda_from, cantidad_from, moneda_to, cantidad_to) VALUES(?,?,?,?,?,?)"
-                cantidad = float(formulario.cantidad.data)
-                moneda1 = str(formulario.moneda1.data)
-                moneda2 = str(formulario.moneda2.data)
-                formulario.fecha.data = date.today()
-                fecha = formulario.fecha.data
-                formulario.hora.data = datetime.today().strftime("%H:%M:%S")
-                hora = formulario.hora.data
-                params = (fecha, hora, moneda1, cantidad, moneda2, total)
-                resultado = db.consultaconparametros(consulta, params)
+            if pulsado == True:  # SI PREVIAMENTE SE HA PULSADO EL BOTÓN DE LA API
+                if formulario.validate():  # SI VALIDA EL FORMULARIO
+                    formulario = movform(data=request.form)
+                    db = DBManager(RUTA)
+                    consulta = "INSERT INTO movimientos (date, time, moneda_from, cantidad_from, moneda_to, cantidad_to) VALUES(?,?,?,?,?,?)"
+                    cantidad = float(formulario.cantidad.data)
+                    moneda1 = str(formulario.moneda1.data)
+                    moneda2 = str(formulario.moneda2.data)
+                    formulario.fecha.data = date.today()
+                    fecha = formulario.fecha.data
+                    formulario.hora.data = datetime.today().strftime("%H:%M:%S")
+                    hora = formulario.hora.data
+                    params = (fecha, hora, moneda1, cantidad, moneda2, total)
+                    resultado = db.consultaconparametros(consulta, params)
 
-                if resultado:  # SI INSERTA EN BBDD
+                    if resultado:  # SI INSERTA EN BBDD
 
-                    flash("Movimiento Actualizado Correctamente",
-                          category="exito")
-                    return redirect(url_for("inicio"))
+                        flash("Movimiento Actualizado Correctamente",
+                              category="exito")
+                        return redirect(url_for("inicio"))
 
-                # SI NO INSERTA EN BBDD
-                else:
-                    return render_template("purchase.html", formulario=formulario, numero=total, errores=["Ha fallado la conexión a la Base de Datos"])
+                    else:  # SI NO INSERTA EN BBDD
 
-            else:  # SI NO VALIDA EL FORMULARIO
-                return render_template("purchase.html", formulario=formulario, numero=total, errores=["Ha fallado la validacion de los datos"])
-        else:  # SI PULSAMOS EL BOTÓN QUE NOS QUEDA, BORRAR (RECARGA PAGINA)
-            return render_template("purchase.html", formulario=formulario, numero=total)
+                        return render_template("purchase.html", formulario=formulario, numero=total, errores=["Ha fallado la conexión a la Base de Datos"])
+
+                else:  # SI NO VALIDA EL FORMULARIO
+
+                    return render_template("purchase.html", formulario=formulario, numero=total, errores=["Ha fallado la validacion de los datos"])
+            else:  # SI NO PULSAMOS EL BOTÓN DE API
+
+                flash("Debes pulsar primero el botónde la API",
+                      category="fallo")
+                return redirect(url_for("purchase"))
 
 
 @app.route("/status",  methods=["GET"])
