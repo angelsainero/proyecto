@@ -34,19 +34,19 @@ Compra de Criptos
         {{formulario.moneda2 }}
     <br>
         {{formulario.cantidad.label}}
-    
+        
         {% if formulario.cantidad.data %}
-          {{formulario.cantidad(disabled=True)}}
-        {% else %}
-         {{formulario.cantidad}}
-        {% endif %} 
+          {{formulario.cantidad(readonly=True)}}
+        {% else %}  
+          {{formulario.cantidad}}
+        {% endif %}
         {{formulario.consultarapi}}
         {{numero}}
         <br>
         <p>P.U.: {{calculo}}</p>
        
     <br>     
-        <button type="reset" name="return" id="return"> Borrar </button>
+        {{formulario.borrar}}
         {{formulario.enviar}}
     
 </form>
