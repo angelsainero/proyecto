@@ -27,8 +27,9 @@ Listado de Movimientos
                 <td>{{mov.moneda_from}}</td>
                 <td>{{mov.cantidad_from}}</td>
                 <td>{{mov.moneda_to}}</td>
-                <td>{{mov.cantidad_to|round(10, 'common')}}</td>
-                <td>{{(mov.cantidad_from / mov.cantidad_to)|round(10, 'common')}}</td>
+                <td>{{mov.cantidad_to|round(5, 'common')}}</td>
+                <td>{{'%0.5f'|format(mov.cantidad_from / mov.cantidad_to|float)}}</td>
+               
             </tr>
             {% endfor %}
         {% else %}
