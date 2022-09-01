@@ -1,4 +1,4 @@
-from operator import truediv
+
 from flask import render_template, request, redirect, flash, url_for
 from . import app
 from .models import DBManager
@@ -56,39 +56,43 @@ def purchase():
             return render_template("purchase.html", formulario=formulario, errores=["Ha fallado la consulta a la API"])
 
         if formulario.enviar.data:  # SI PULSAMO BUTTON ENVIAR
-            if pulsado == True:  # SI PREVIAMENTE SE HA PULSADO EL BOTÓN DE LA API
-                if formulario.validate():  # SI VALIDA EL FORMULARIO
-                    formulario = movform(data=request.form)
-                    db = DBManager(RUTA)
-                    consulta = "INSERT INTO movimientos (date, time, moneda_from, cantidad_from, moneda_to, cantidad_to) VALUES(?,?,?,?,?,?)"
-                    cantidad = float(formulario.cantidad.data)
-                    moneda1 = str(formulario.moneda1.data)
-                    moneda2 = str(formulario.moneda2.data)
-                    formulario.fecha.data = date.today()
-                    fecha = formulario.fecha.data
-                    formulario.hora.data = datetime.today().strftime("%H:%M:%S")
-                    hora = formulario.hora.data
-                    params = (fecha, hora, moneda1, cantidad, moneda2, total)
-                    resultado = db.consultaconparametros(consulta, params)
+            try:
+                if pulsado == True:  # SI PREVIAMENTE SE HA PULSADO EL BOTÓN DE LA API
+                    if formulario.validate():  # SI VALIDA EL FORMULARIO
+                        formulario = movform(data=request.form)
+                        db = DBManager(RUTA)
+                        consulta = "INSERT INTO movimientos (date, time, moneda_from, cantidad_from, moneda_to, cantidad_to) VALUES(?,?,?,?,?,?)"
+                        cantidad = float(formulario.cantidad.data)
+                        moneda1 = str(formulario.moneda1.data)
+                        moneda2 = str(formulario.moneda2.data)
+                        formulario.fecha.data = date.today()
+                        fecha = formulario.fecha.data
+                        formulario.hora.data = datetime.today().strftime("%H:%M:%S")
+                        hora = formulario.hora.data
+                        params = (fecha, hora, moneda1,
+                                  cantidad, moneda2, total)
+                        resultado = db.consultaconparametros(consulta, params)
 
-                    if resultado:  # SI INSERTA EN BBDD
+                        if resultado:  # SI INSERTA EN BBDD
 
-                        flash("Movimiento Actualizado Correctamente",
-                              category="exito")
-                        return redirect(url_for("inicio"))
+                            flash("Movimiento Actualizado Correctamente",
+                                  category="exito")
+                            return redirect(url_for("inicio"))
 
-                    else:  # SI NO INSERTA EN BBDD
+                        else:  # SI NO INSERTA EN BBDD
 
-                        return render_template("purchase.html", formulario=formulario, numero=total, errores=["Ha fallado la conexión a la Base de Datos"])
+                            return render_template("purchase.html", formulario=formulario, numero=total, errores=["Ha fallado la conexión a la Base de Datos"])
 
-                else:  # SI NO VALIDA EL FORMULARIO
+                    else:  # SI NO VALIDA EL FORMULARIO
 
-                    return render_template("purchase.html", formulario=formulario, numero=total, errores=["Ha fallado la validacion de los datos"])
-            else:  # SI NO PULSAMOS EL BOTÓN DE API
+                        return render_template("purchase.html", formulario=formulario, numero=total, errores=["Ha fallado la validacion de los datos"])
+                else:  # SI NO PULSAMOS EL BOTÓN DE API
 
-                flash("Debes pulsar primero el botónde la API",
-                      category="fallo")
-                return redirect(url_for("purchase"))
+                    flash("Debes pulsar primero el botónde la API",
+                          category="fallo")
+                    return redirect(url_for("purchase"))
+            except:
+                return render_template("purchase.html", formulario=formulario, errores=["Ha fallado la conexión a la BBDD"])
         if formulario.borrar.data:
             pulsado = False
             return redirect(url_for("purchase"))
